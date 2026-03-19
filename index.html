@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Quran Verse</title>
+  <meta name="description" content="One Quran verse per day, uniquely sequenced per visitor across 365 days.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div id="particles" class="particles"></div>
+
+  <header class="brand">One Day One Verse</header>
+
+  <main class="overlay">
+    <div class="card" role="main">
+
+      <div id="state-loading" class="state">
+        <div class="loader">
+          <div class="spinner"></div>
+          <p>Fetching your verse</p>
+        </div>
+      </div>
+
+      <div id="state-main" class="state hidden">
+        <div class="verse-header">
+          <span class="surah-name" id="surah-name"></span>
+          <span class="verse-ref" id="verse-ref"></span>
+        </div>
+        <div class="arabic" id="arabic" dir="rtl" lang="ar"></div>
+        <blockquote class="translation" id="translation"></blockquote>
+        <footer class="card-footer">
+          <span class="date-label" id="date-label"></span>
+          <button class="regen-btn" id="regen-btn" title="Show another verse" aria-label="Load another verse">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            </svg>
+            Another verse
+          </button>
+        </footer>
+      </div>
+
+      <div id="state-error" class="state hidden">
+        <div class="error-state">
+          <p>Unable to load verse. Please check your connection.</p>
+          <button class="retry-btn" id="retry-btn">Try Again</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="assets/js/seed.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

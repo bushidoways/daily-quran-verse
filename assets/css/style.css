@@ -1,0 +1,327 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --color-green: #2d6a4f;
+  --color-green-light: #52b788;
+  --color-gold: #c9a84c;
+  --color-text: #e8e0d5;
+  --color-muted: #7a8fa8;
+  --card-bg: rgba(7, 16, 28, 0.90);
+  --card-border: rgba(82, 183, 136, 0.18);
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  color: var(--color-text);
+}
+
+/* ── Background ──────────────────────────────────────── */
+
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(-45deg, #060d18, #0b1e30, #091508, #0d1e2c, #0a1a0e, #060d18);
+  background-size: 600% 600%;
+  animation: bg-shift 22s ease infinite;
+}
+
+@keyframes bg-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+  animation: orb-pulse 9s ease-in-out infinite alternate;
+}
+
+.orb-1 {
+  width: 550px; height: 550px;
+  background: radial-gradient(circle, #1a4a32, transparent);
+  top: -180px; left: -180px;
+  opacity: 0.13;
+}
+.orb-2 {
+  width: 480px; height: 480px;
+  background: radial-gradient(circle, #0e3254, transparent);
+  bottom: -160px; right: -160px;
+  opacity: 0.12; animation-delay: 5s;
+}
+.orb-3 {
+  width: 360px; height: 360px;
+  background: radial-gradient(circle, #6b4c11, transparent);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.07; animation-delay: 2s;
+}
+
+@keyframes orb-pulse {
+  from { opacity: 0.08; }
+  to   { opacity: 0.18; }
+}
+
+/* ── Particles ───────────────────────────────────────── */
+
+.particles {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  animation: particle-rise linear infinite;
+}
+
+@keyframes particle-rise {
+  0%   { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.5; }
+  100% { transform: translateY(-5vh) translateX(var(--drift)) scale(1); opacity: 0; }
+}
+
+/* ── Brand ───────────────────────────────────────────── */
+
+.brand {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  font-size: 11px;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.22);
+  font-weight: 300;
+  white-space: nowrap;
+}
+
+/* ── Layout ──────────────────────────────────────────── */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid var(--card-border);
+  border-radius: 22px;
+  width: 100%;
+  max-width: 620px;
+  padding: 36px 40px;
+  box-shadow:
+    0 0 0 1px rgba(82, 183, 136, 0.06),
+    0 32px 80px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  animation: card-in 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── State visibility ────────────────────────────────── */
+
+.state.hidden { display: none; }
+
+/* ── Loading ─────────────────────────────────────────── */
+
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 56px 0;
+  color: var(--color-muted);
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(82, 183, 136, 0.15);
+  border-top-color: var(--color-green-light);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Verse header ────────────────────────────────────── */
+
+.verse-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.surah-name {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--color-green-light);
+}
+
+.verse-ref {
+  font-size: 11px;
+  color: var(--color-muted);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 4px 11px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ── Arabic ──────────────────────────────────────────── */
+
+.arabic {
+  font-family: 'Amiri', serif;
+  font-size: 32px;
+  line-height: 2.1;
+  text-align: right;
+  color: #f2e8cc;
+  margin-bottom: 20px;
+  padding: 24px 28px;
+  background: rgba(201, 168, 76, 0.06);
+  border-radius: 14px;
+  border: 1px solid rgba(201, 168, 76, 0.13);
+}
+
+/* ── Translation ─────────────────────────────────────── */
+
+.translation {
+  font-size: 14px;
+  line-height: 1.85;
+  color: rgba(232, 224, 213, 0.88);
+  font-weight: 300;
+  font-style: italic;
+  padding-left: 14px;
+  border-left: 2px solid rgba(82, 183, 136, 0.35);
+}
+
+/* ── Card footer ─────────────────────────────────────── */
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.date-label {
+  font-size: 11px;
+  color: var(--color-muted);
+  letter-spacing: 0.3px;
+}
+
+/* ── Regenerate button ───────────────────────────────── */
+
+.regen-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  background: transparent;
+  border: 1px solid rgba(82, 183, 136, 0.25);
+  border-radius: 20px;
+  color: var(--color-muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.regen-btn:hover {
+  border-color: var(--color-green-light);
+  color: var(--color-green-light);
+  background: rgba(82, 183, 136, 0.08);
+}
+
+.regen-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.regen-btn svg {
+  transition: transform 0.5s ease;
+}
+
+.regen-btn.spinning svg {
+  transform: rotate(360deg);
+}
+
+/* ── Fade-in animation ───────────────────────────────── */
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up { animation: fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* ── Error state ─────────────────────────────────────── */
+
+.error-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--color-muted);
+}
+
+.error-state p {
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.retry-btn {
+  padding: 10px 24px;
+  background: rgba(82, 183, 136, 0.12);
+  border: 1px solid var(--color-green-light);
+  border-radius: 8px;
+  color: var(--color-green-light);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.retry-btn:hover { background: rgba(82, 183, 136, 0.22); }
+
+/* ── Responsive ──────────────────────────────────────── */
+
+@media (max-width: 500px) {
+  .card { padding: 24px 18px; }
+  .arabic { font-size: 26px; padding: 18px 18px; }
+  .brand { font-size: 9px; letter-spacing: 2px; }
+}
