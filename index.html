@@ -1,65 +1,303 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daily Quran Verse</title>
-  <meta name="description" content="One Quran verse per day, uniquely sequenced per visitor across 365 days.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>One Day One Verse</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gl:#52b788;--green:#2d6a4f;
+  --gold:#c9a84c;
+  --text:#e8e0d5;--muted:#7a8fa8;
+  --card:rgba(7,16,28,0.92);
+  --border:rgba(82,183,136,0.18);
+}
+html{height:100%;-webkit-text-size-adjust:100%}
+body{min-height:100%;overflow-x:hidden;overflow-y:auto;font-family:'Inter',sans-serif;color:var(--text)}
+
+.bg{position:fixed;inset:0;z-index:0;
+  background:linear-gradient(-45deg,#060d18,#0b1e30,#091508,#0d1e2c,#0a1a0e,#060d18);
+  background-size:600% 600%;animation:bgS 22s ease infinite}
+@keyframes bgS{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+.orb{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;animation:oP 9s ease-in-out infinite alternate}
+.o1{width:400px;height:400px;background:radial-gradient(circle,#1a4a32,transparent);top:-120px;left:-120px;opacity:.15}
+.o2{width:360px;height:360px;background:radial-gradient(circle,#0e3254,transparent);bottom:-120px;right:-120px;opacity:.14;animation-delay:5s}
+.o3{width:280px;height:280px;background:radial-gradient(circle,#6b4c11,transparent);top:50%;left:50%;transform:translate(-50%,-50%);opacity:.08;animation-delay:2s}
+@keyframes oP{from{opacity:.08}to{opacity:.18}}
+
+.pts{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.pt{position:absolute;border-radius:50%;animation:rise linear infinite}
+@keyframes rise{
+  0%{transform:translateY(100vh) translateX(0) scale(0);opacity:0}
+  10%{opacity:1}90%{opacity:.5}
+  100%{transform:translateY(-5vh) translateX(var(--d)) scale(1);opacity:0}
+}
+
+.brand{
+  position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:5;
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(255,255,255,.22);font-weight:300;white-space:nowrap
+}
+
+.overlay{
+  position:relative;z-index:10;
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:60px 16px 32px;
+}
+
+.card{
+  background:var(--card);
+  backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
+  border:1px solid var(--border);border-radius:20px;
+  width:100%;max-width:620px;
+  padding:28px 24px;
+  box-shadow:0 0 0 1px rgba(82,183,136,.06),0 24px 64px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.05);
+  animation:cIn .7s cubic-bezier(.16,1,.3,1);
+}
+@keyframes cIn{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* Loading */
+.ld{display:flex;flex-direction:column;align-items:center;gap:14px;padding:48px 0;color:var(--muted);font-size:13px;letter-spacing:.5px}
+.spin{width:30px;height:30px;border:2px solid rgba(82,183,136,.15);border-top-color:var(--gl);border-radius:50%;animation:sp .75s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* Verse header */
+.vhdr{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;margin-bottom:20px;flex-wrap:wrap;
+}
+.sname{
+  font-size:10px;font-weight:600;letter-spacing:2px;
+  text-transform:uppercase;color:var(--gl);
+  line-height:1.5;flex:1;min-width:0;
+}
+.vref{
+  font-size:11px;color:var(--muted);
+  background:rgba(255,255,255,.05);
+  padding:4px 10px;border-radius:20px;
+  border:1px solid rgba(255,255,255,.08);
+  white-space:nowrap;flex-shrink:0;
+}
+
+/* Arabic */
+.arabic{
+  font-family:'Amiri',serif;
+  font-size:clamp(22px, 5.5vw, 32px);
+  line-height:2;
+  text-align:right;color:#f2e8cc;direction:rtl;
+  margin-bottom:18px;padding:18px 20px;
+  background:rgba(201,168,76,.06);border-radius:14px;
+  border:1px solid rgba(201,168,76,.13);
+  word-break:break-word;
+}
+
+/* Translation */
+.trans{
+  font-size:clamp(13px,3.5vw,14px);
+  line-height:1.85;color:rgba(232,224,213,.88);
+  font-weight:300;font-style:italic;
+  padding-left:14px;border-left:2px solid rgba(82,183,136,.35);
+  word-break:break-word;
+}
+
+/* Footer */
+.foot{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
+  margin-top:22px;padding-top:16px;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.dbadge{font-size:11px;color:var(--muted);letter-spacing:.2px}
+
+/* Regenerate button */
+.regen{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 14px;
+  background:transparent;
+  border:1px solid rgba(82,183,136,.25);
+  border-radius:20px;
+  color:var(--muted);
+  font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.4px;
+  cursor:pointer;transition:all .2s ease;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.regen:hover,.regen:active{border-color:var(--gl);color:var(--gl);background:rgba(82,183,136,.08)}
+.regen:disabled{opacity:.4;cursor:not-allowed}
+.regen svg{transition:transform .5s ease;flex-shrink:0}
+.regen.spinning svg{transform:rotate(360deg)}
+
+/* Fade */
+.fade{animation:fadeUp .4s cubic-bezier(.16,1,.3,1)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Error */
+.err{text-align:center;padding:40px 16px;color:var(--muted)}
+.err p{margin-bottom:16px;font-size:14px;line-height:1.6}
+.rbtn{
+  padding:10px 24px;background:rgba(82,183,136,.12);
+  border:1px solid var(--gl);border-radius:8px;color:var(--gl);
+  font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;
+  transition:all .2s;letter-spacing:.5px;
+  -webkit-tap-highlight-color:transparent;
+}
+.rbtn:hover,.rbtn:active{background:rgba(82,183,136,.22)}
+
+.hidden{display:none!important}
+
+/* ── Tablet ── */
+@media(min-width:480px){
+  .card{padding:32px 32px}
+  .arabic{padding:20px 24px}
+}
+
+/* ── Desktop ── */
+@media(min-width:768px){
+  .overlay{padding:72px 24px 40px}
+  .card{padding:36px 40px;border-radius:22px}
+  .arabic{font-size:32px;padding:24px 28px}
+  .brand{font-size:11px;letter-spacing:3.5px}
+  .vhdr{flex-wrap:nowrap;align-items:center}
+  .sname{font-size:11px;letter-spacing:2.5px}
+}
+</style>
 </head>
 <body>
-  <div class="bg"></div>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-  <div id="particles" class="particles"></div>
+<div class="bg"></div>
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+<div class="pts" id="pts"></div>
+<div class="brand">One Day One Verse</div>
 
-  <header class="brand">One Day One Verse</header>
+<div class="overlay">
+  <div class="card">
 
-  <main class="overlay">
-    <div class="card" role="main">
-
-      <div id="state-loading" class="state">
-        <div class="loader">
-          <div class="spinner"></div>
-          <p>Fetching your verse</p>
-        </div>
-      </div>
-
-      <div id="state-main" class="state hidden">
-        <div class="verse-header">
-          <span class="surah-name" id="surah-name"></span>
-          <span class="verse-ref" id="verse-ref"></span>
-        </div>
-        <div class="arabic" id="arabic" dir="rtl" lang="ar"></div>
-        <blockquote class="translation" id="translation"></blockquote>
-        <footer class="card-footer">
-          <span class="date-label" id="date-label"></span>
-          <button class="regen-btn" id="regen-btn" title="Show another verse" aria-label="Load another verse">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
-              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-            </svg>
-            Another verse
-          </button>
-        </footer>
-      </div>
-
-      <div id="state-error" class="state hidden">
-        <div class="error-state">
-          <p>Unable to load verse. Please check your connection.</p>
-          <button class="retry-btn" id="retry-btn">Try Again</button>
-        </div>
-      </div>
-
+    <div id="ldState">
+      <div class="ld"><div class="spin"></div><span>Fetching your verse</span></div>
     </div>
-  </main>
 
-  <script src="assets/js/seed.js"></script>
-  <script src="assets/js/api.js"></script>
-  <script src="assets/js/ui.js"></script>
-  <script src="assets/js/main.js"></script>
+    <div id="main" class="hidden">
+      <div class="vhdr">
+        <span class="sname" id="sname"></span>
+        <span class="vref" id="vref"></span>
+      </div>
+      <div class="arabic" id="arabic"></div>
+      <div class="trans" id="eng"></div>
+      <div class="foot">
+        <span class="dbadge" id="dbadge"></span>
+        <button class="regen" id="regenBtn" title="Show another verse">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+          Another verse
+        </button>
+      </div>
+    </div>
+
+    <div id="errState" class="hidden err">
+      <p>Unable to load verse. Check your connection.</p>
+      <button class="rbtn" onclick="loadVerse()">Try Again</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function mkRng(seed){
+  return()=>{
+    seed|=0;seed=(seed+0x6D2B79F5)|0;
+    let t=Math.imul(seed^seed>>>15,1|seed);
+    t=(t+Math.imul(t^t>>>7,61|t))^t;
+    return((t^t>>>14)>>>0)/4294967296;
+  };
+}
+function shuffle(arr,seed){
+  const rng=mkRng(seed),a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function getUserSeed(){
+  let s=localStorage.getItem('odov_s');
+  if(!s){s=String(Math.floor(Math.random()*9999999));localStorage.setItem('odov_s',s);}
+  return+s;
+}
+function dayOfYear(d=new Date()){
+  return Math.ceil((d-new Date(d.getFullYear(),0,1))/86400000);
+}
+function getDailyVerse(){
+  const seed=getUserSeed()^(new Date().getFullYear()*7919);
+  return shuffle(Array.from({length:6236},(_,i)=>i+1),seed)[(dayOfYear()-1)%365];
+}
+function getRandomVerse(exclude){
+  let n;do{n=Math.floor(Math.random()*6236)+1;}while(n===exclude);return n;
+}
+
+const BASE='https://api.alquran.cloud/v1',CACHE={};
+async function fetchVerse(n){
+  if(CACHE[n])return CACHE[n];
+  const r=await fetch(`${BASE}/ayah/${n}/editions/quran-uthmani,en.sahih`);
+  const j=await r.json();
+  if(j.code!==200)throw new Error('API '+j.code);
+  CACHE[n]=j.data;return j.data;
+}
+
+const $=id=>document.getElementById(id);
+let current=null;
+
+function animateContent(){
+  ['arabic','eng'].forEach(id=>{
+    const el=$(id);el.classList.remove('fade');
+    void el.offsetWidth;el.classList.add('fade');
+  });
+}
+
+async function loadVerse(n){
+  if(n===undefined)n=getDailyVerse();
+  const first=current===null,btn=$('regenBtn');
+  if(first){
+    $('errState').classList.add('hidden');
+    $('ldState').classList.remove('hidden');
+    $('main').classList.add('hidden');
+  } else {
+    btn.disabled=true;btn.classList.add('spinning');
+  }
+  try{
+    const[ar,en]=await fetchVerse(n);
+    current=n;
+    $('sname').textContent=`${ar.surah.name}  ${ar.surah.englishName}`;
+    $('vref').textContent=`${ar.surah.number}:${ar.numberInSurah}`;
+    $('arabic').textContent=ar.text;
+    $('eng').textContent=en.text;
+    $('dbadge').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    if(first){$('ldState').classList.add('hidden');$('main').classList.remove('hidden');}
+    else animateContent();
+  }catch(e){
+    console.error(e);
+    if(first){$('ldState').classList.add('hidden');$('errState').classList.remove('hidden');}
+  }finally{
+    if(!first)setTimeout(()=>{btn.disabled=false;btn.classList.remove('spinning');},400);
+  }
+}
+
+$('regenBtn').addEventListener('click',()=>loadVerse(getRandomVerse(current)));
+
+(function(){
+  const c=$('pts'),f=document.createDocumentFragment();
+  for(let i=0;i<20;i++){
+    const p=document.createElement('div');p.className='pt';
+    const sz=Math.random()*3+1,drift=((Math.random()-.5)*60).toFixed(1);
+    const isGold=Math.random()>.65,col=isGold?'201,168,76':'82,183,136';
+    p.style.cssText=`width:${sz}px;height:${sz}px;left:${(Math.random()*100).toFixed(1)}%;--d:${drift}px;animation-duration:${(Math.random()*14+10).toFixed(1)}s;animation-delay:-${(Math.random()*14).toFixed(1)}s;background:rgba(${col},${(Math.random()*.35+.1).toFixed(2)})`;
+    f.appendChild(p);
+  }
+  c.appendChild(f);
+})();
+
+loadVerse();
+</script>
 </body>
 </html>
